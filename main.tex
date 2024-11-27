@@ -1,0 +1,176 @@
+\documentclass[journal]{IEEEtran}
+%\documentclass[journal,a5paper]{IEEEtran}
+\usepackage[a5paper, margin=10mm]{geometry}
+\setlength{\headheight}{1cm} % Set the height of the header box
+\setlength{\headsep}{0mm}     % Set the distance between the header box and the top of the text
+\usepackage{gvv-book}
+\usepackage{gvv}
+
+
+\begin{document}
+\bibliographystyle{IEEEtran}
+\onecolumn
+
+\newpage
+%\twocolumn
+\onecolumn
+
+
+\numberwithin{figure}{section}
+\numberwithin{table}{section} 
+\numberwithin{equation}{section}
+\iffalse
+\renewcommand{\thefigure}{\theenumi}
+\renewcommand{\thetable}{\theenumi}
+\renewcommand{\theequation}{\theenumi}
+\fi
+\section{Pico W}
+\begin{enumerate}[label=\arabic*.,ref=\theenumi]
+%\begin{enumerate}[label=\thesubsection.\arabic*.,ref=\thesubsection.\theenumi]
+
+\item Power on Pico W using USB cable. Connect RUN on pico W to GND. Keep pressing BOOTSEL while removing the RUN-GND wire from GND.Pico W is now ready to be flashed.
+\item Login to termux-debian and execute the following commands.
+\begin{lstlisting}
+cd .platformio/packages
+git clone https://github.com/earlephilhower/arduino-pico
+cd arduino-pico
+git submodule update --init
+cd pico-sdk
+git submodule update --init
+cd ../tools
+python3 ./get.py
+git clone https://github.com/gadepall/afw/ide/piosetup/codes
+cd codes
+pio run
+\end{lstlisting}
+% Insert your image here
+\begin{center}
+    \includegraphics[width=0.6\textwidth, height=0.3\textheight]{installation/picowpinout.jpg}
+    \vspace{0.5em} % Adjust the amount of space as needed
+    \captionof{figure}{Pin Diagram} % Adds a centered caption under the image
+\end{center}
+\vspace{0.5em} % Adjust the amount of space as needed
+\item Connect RUN on pico W to GND. Keep pressing BOOTSEL while removing the RUN-GND wire from GND.Pico W is now ready to be flashed.
+\begin{lstlisting}
+Download EtchDroid from playstore.Flash the uf2 file using EtchDroid.
+\end{lstlisting}
+\vspace{0.5em} % Adjust the amount of space as needed
+\item The Onboard LED will start blinking.
+\end{enumerate}
+
+\subsection{Seven Segment}
+\begin{enumerate}[label=\arabic*.,ref=\theenumi]
+%\begin{enumerate}[label=\thesubsection.\arabic*.,ref=\thesubsection.\theenumi]
+\item Execute the following code to drive the seven segment display.
+\begin{lstlisting}
+ide/sevenseg/codes/sevenseg/sevenseg.cpp
+\end{lstlisting}
+\item
+Make connections according to Table \ref{table:ard_disp_num}
+%\iffalse
+\begin{table}[H]
+\centering
+\input{ide/sevenseg/figs/ard_disp_num}
+\caption{}
+\label{table:ard_disp_num}
+\end{table}
+
+%\fi
+\item
+Now generate the numbers 0-9 by modifying the above program.
+
+\end{enumerate}
+
+\subsection{7447}
+\begin{enumerate}[label=\arabic*.,ref=\theenumi]
+		\numberwithin{figure}{section}
+\item
+Now make the connections as per Table \ref{table:7447_ard}  and execute the following program to drive the seven segment display using 7447 IC. 
+\begin{lstlisting}
+ide/7447/codes/gvv_ard_7447/gvv_ard_7447.cpp
+\end{lstlisting}
+
+\begin{table}[H]
+\centering
+\input{ide/7447/figs/7447_ard.tex}
+\caption{}
+\label{table:7447_ard}
+\end{table}
+
+% 
+\item
+ $W,X,Y,Z$ are the inputs
+and $A,B,C,D$ are the outputs. The code below realizes the Boolean logic for B, C and D.  Write the logic for A and verify.
+\begin{lstlisting}
+ide/7447/codes/inc_dec/inc_dec.ino
+\end{lstlisting}
+
+\item
+Now make additional connections as shown in Table \ref{table:ip_7447_ard} and execute the following code.  Comment.
+%			\lstinputlisting{ide/7447/codes/ip_inc_dec/ip_inc_dec.ino}
+\begin{lstlisting}
+ide/7447/codes/ip_inc_dec/ip_inc_dec.cpp
+\end{lstlisting}
+
+\solution
+In this exercise, we are taking the number 5 as input to the pico W and displaying it on the seven segment display using the 7447 IC.
+\begin{table}[H]
+\centering
+\input{ide/7447/figs/ip_7447_ard.tex}
+\caption{}
+\label{table:ip_7447_ard}
+\end{table}
+\item
+Verify the above code for all inputs from 0-9.
+\end{enumerate}
+%\vspace{3em} % Adjust the amount of space as needed
+\subsection{K-Map}
+\begin{enumerate}[label=\arabic*.,ref=\theenumi]
+%\begin{enumerate}[label=\thesubsection.\arabic*.,ref=\thesubsection.\theenumi]
+\item Execute the code in
+\begin{lstlisting}
+ide/7447/codes/inc_dec/inc_dec.cpp
+\end{lstlisting}
+%
+and modify it using the K-Map equations for $A,B,C$ and $D$. Execute and verify for each case.
+\end{enumerate}
+
+\subsection{7474}
+\begin{enumerate}[label=\arabic*.,ref=\theenumi]
+\item
+Generate the CLOCK signal using the \textbf{blink} program in the pico W. 
+\item
+Connect the pico W, 7447 and the two 7474 ICs according to Table \ref{fig:ff_ard_pin} and Fig. \ref{fig:decade_counter}.
+
+			\begin{table}[H]
+%\begin{table}
+\centering
+\input{ide/7474/figs/ff_ard_pin.tex}
+\caption{}
+\label{fig:ff_ard_pin}
+%\end{table}
+\end{table}
+%
+\item
+Intelligently use the codes in 
+\begin{lstlisting}
+ide/7447/codes/inc_dec/inc_dec.ino
+\end{lstlisting}
+and
+\begin{lstlisting}
+ide/7447/codes/inc_dec/ip_inc_dec.ino
+\end{lstlisting}
+to realize the decade counter in Fig. \ref{fig:decade_counter}.
+% 
+ \begin{figure}[H]
+\begin{center}
+\resizebox {0.5\columnwidth} {!} {
+\input{ide/7474/figs/decade_counter.tex}
+}
+\end{center}
+\caption{}
+\label{fig:decade_counter}
+\end{figure}
+%
+\end{enumerate}
+\end{document}
